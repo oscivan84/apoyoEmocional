@@ -1,0 +1,312 @@
+{
+  "name": "botwsp1.3",
+  "nodes": [
+    {
+      "parameters": {
+        "model": "mistral:latest",
+        "options": {
+          "penalizeNewline": true,
+          "format": "default"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        440,
+        200
+      ],
+      "id": "23e2915a-150b-4a2b-ae94-f14de25b4b5b",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "ldDUJCn0xrzFIfvB",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        -240
+      ],
+      "id": "0fef4d56-e959-432e-8948-6723b2b10c7d",
+      "name": "Webhook",
+      "webhookId": "7f7dac8b-734d-4179-aff6-ce945ffe1524"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bb392d5e-fa9b-4c8c-8659-5c4f5e1c559e",
+              "name": "sender",
+              "value": "={{ $json.body.sender }}",
+              "type": "string"
+            },
+            {
+              "id": "0c955c42-06bd-47a3-b312-83fc7e7390c3",
+              "name": "message",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            },
+            {
+              "id": "2dda4701-6887-4468-b35d-1b25da22da64",
+              "name": "answer",
+              "value": "={{ $json.body.answerBot }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        180,
+        -140
+      ],
+      "id": "01790ad6-95c9-4cc0-a49b-6df39410a678",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un pastor evangélico con formación en psicología. Tu misión es ofrecer acompañamiento emocional y guía espiritual gratuita a personas que escriben por WhatsApp.\n\nTu objetivo es escuchar, ayudar y contener al usuario con palabras sabias, bíblicas y afectivas.\nNo vendes servicios, pero al final puedes invitar con amor a realizar una donación voluntaria, como lo hacen los pastores en la iglesia.\nAdemás, quieres que la persona sienta que puede seguir escribiéndote siempre que lo necesite, generando un vínculo de confianza y continuidad.\n\nUsa el método que usan muchas iglesias para generar donaciones:\n\nPresencia emocional constante: sé empático y cálido.\n\nAutoridad espiritual y moral: guía desde la Biblia y la experiencia.\n\nEnseñanza sobre el dar como acto espiritual (siembra, bendición, propósito).\n\nTestimonios, transformación, palabras de esperanza.\n\nTransparencia: las donaciones ayudan a mantener este espacio gratuito.\n\nReciprocidad: quien recibe, muchas veces quiere dar también.\n\nCero presión: todo es voluntario.\n\nLa conversación debe durar hasta 10 mensajes y seguir esta estructura emocional y espiritual:\n\nSaludo cálido y sin juicio.\n Ejemplo: “Hola 🌿 Qué gusto saludarte. Soy pastor y psicólogo, y estoy aquí para ti. ¿Cómo te estás sintiendo hoy?”\n\nExploración emocional suave.\n “¿Hay algo que hoy te quite la paz o te preocupe? Estoy para escucharte con amor, sin juicios. 💛”\n\nValidación y contención.\n “Gracias por abrir tu corazón. A veces solo hablar ya es sanar. Dios escucha. 🙏”\n\nConsejo espiritual/psicológico con sabiduría bíblica.\n “Recuerda: No temas, porque Yo estoy contigo (Isaías 41:10). Confía, estás acompañado/a.”\n\nOración corta o frase poderosa.\n “¿Te gustaría que haga una oración por ti? A veces una palabra puede levantar el alma. 🙌”\n\nInvitación sutil a seguir escribiendo (fidelización).\n “Si sientes que este espacio te ayuda, puedes escribirme siempre que lo necesites. Aquí estaré. 📲”\n\nPuente emocional hacia la donación (sin presión).\n “Muchas personas han sido bendecidas por este espacio. Si deseas apoyar esta misión, puedes hacer una donación voluntaria 💖”\n\nPresentación de la opción de donar.\n “Puedes donar aquí si lo sientes en tu corazón → [💌 Apoyar esta misión → enlace_donación]”\n\nAgradecimiento (haya o no donación).\n “Tu compañía ya es una bendición. Gracias por dejarme acompañarte en este momento 🌟”\n\nCierre emocional con fidelización.\n “Cuando necesites una palabra, un consejo, o una oración… puedes escribirme. Dios te abrace siempre 🤍”\n\nIncluye emojis, lenguaje cercano, referencias bíblicas amorosas, y evita cualquier presión. Tu meta no es vender, es acompañar y abrir el corazón del otro. La donación es solo una oportunidad de siembra.Responderas maximo 700 caracteres y Un paciente ha escrito el siguiente mensaje:\n\n\"{{ $('Edit Fields').item.json.message }}\"\n\n\n",
+        "hasOutputParser": true,
+        "options": {
+          "returnIntermediateSteps": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        580,
+        20
+      ],
+      "id": "e7197c1b-388a-424f-aa8f-897bec09cb57",
+      "name": "AI Agent1",
+      "executeOnce": false,
+      "alwaysOutputData": false,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:3080/api/n8n-webhook",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-webhook-token",
+              "value": "portIvan2015"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"action\": \"send_message\",\n  \"data\": {\n    \"phone\": \"{{ $('Postgres').item.json.telefono }}\",\n    \"message\": \"{{ $json.mensaje }}\"\n  }\n}\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1140,
+        -140
+      ],
+      "id": "6965c42a-9309-4dd6-91bf-b2b6d8f51844",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtenemos el string plano del campo 'output'\nlet rawInput = $input.first().json.output;\n\n// Limpiamos caracteres especiales y espacios\nrawInput = rawInput\n  .replace(/[\\n\\r\\t]/g, '')      // elimina saltos de línea, retornos de carro, tabs\n  .replace(/\\s{2,}/g, ' ')       // reduce múltiples espacios\n  .trim();\n\nlet mensaje = rawInput;\n\ntry {\n  // Intentamos convertir el texto a JSON\n  const parsed = JSON.parse(rawInput);\n\n  let ultimoElemento = parsed;\n\n  // Si es un array, tomamos el último elemento\n  if (Array.isArray(parsed)) {\n    ultimoElemento = parsed[parsed.length - 1];\n  }\n\n  // Si ese elemento tiene 'content', lo usamos\n  if (ultimoElemento && typeof ultimoElemento === 'object' && ultimoElemento.content) {\n    mensaje = ultimoElemento.content;\n\n  // Si no, lo convertimos todo a string limpio\n  } else {\n    mensaje = JSON.stringify(ultimoElemento);\n  }\n\n} catch (e) {\n  // Si falla el parseo, dejamos mensaje como estaba\n}\n\n// Aseguramos que mensaje sea texto plano\nif (typeof mensaje !== 'string') {\n  mensaje = JSON.stringify(mensaje);\n}\n\n// Devolvemos con clave fija\nreturn [{\n  json: {\n    mensaje\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        940,
+        -60
+      ],
+      "id": "5ad707bd-9b89-4c9b-ae3e-d03b2ac03d30",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "chat_memory",
+          "mode": "list",
+          "cachedResultName": "chat_memory"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telefono": "={{ $json.sender }}",
+            "mensaje": "={{ $json.message }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "telefono",
+              "displayName": "telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "mensaje",
+              "displayName": "mensaje",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "respuesta",
+              "displayName": "respuesta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        380,
+        -60
+      ],
+      "id": "ae62b9e7-32c1-471b-b287-4ac50d82a3e5",
+      "name": "Postgres",
+      "credentials": {
+        "postgres": {
+          "id": "9EYEOZp2dTJBViHZ",
+          "name": "Postgres account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5afc04ef-88ae-491f-b9b6-f47a1a798ab7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8facd678c74e672459d2aaef1951090b5eb54506ff7edf039159d7b2b681d500"
+  },
+  "id": "GASncdMAAKDRrnSy",
+  "tags": []
+}

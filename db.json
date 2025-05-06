@@ -1,0 +1,58 @@
+[
+  {
+    "ref": "0c2fa83c-bae9-4ae3-ac63-30b2ac574e67",
+    "keyword": "bd2cc9f5bfcf69a78f5f97ea2feea69c",
+    "answer": "Hola",
+    "options": {},
+    "from": "573155935407",
+    "refSerialize": "c22e4066d61d81721def9b25d8a397e8"
+  },
+  {
+    "ref": "cb07ee17-b850-4642-a3e0-cdacd423154f",
+    "keyword": "c22e4066d61d81721def9b25d8a397e8",
+    "answer": "Hola. ¿Quien eres? Contesta en 25 palabras",
+    "options": {},
+    "from": "573155935407",
+    "refSerialize": "6e411a28b2626c5ac82b24400b75fc00"
+  },
+  {
+    "ref": "fcdf9fe4-a89c-427d-8221-dae1d86c2905",
+    "keyword": "6e411a28b2626c5ac82b24400b75fc00",
+    "answer": "Hola. ¿Quien eres? Contesta en 25 palabras",
+    "options": {},
+    "from": "573155935407",
+    "refSerialize": "6e411a28b2626c5ac82b24400b75fc00"
+  },
+  {
+    "ref": "84826f39-87dd-41c0-80b2-5687afd03393",
+    "keyword": "6e411a28b2626c5ac82b24400b75fc00",
+    "answer": "¿Hola, quien Eres?",
+    "options": {},
+    "from": "573155935407",
+    "refSerialize": "8fcc9e3b5c59b9c838af19560becbbce"
+  },
+  {
+    "ref": "5e2484e8-273a-4080-81ba-8f92611efe5d",
+    "keyword": "8fcc9e3b5c59b9c838af19560becbbce",
+    "answer": "Hola",
+    "options": {},
+    "from": "573155935407",
+    "refSerialize": "c22e4066d61d81721def9b25d8a397e8"
+  },
+  {
+    "ref": "3f7b5926-fc94-48d1-b64a-9a2a73c949a4",
+    "keyword": "c22e4066d61d81721def9b25d8a397e8",
+    "answer": "No quiero ir a trabajar, tampoco bañarme, ni comer",
+    "options": {},
+    "from": "573155935407",
+    "refSerialize": "a242761f52dd6a2bc070bf213dc4c0c3"
+  },
+  {
+    "ref": "cc010830-f06e-46df-88de-c5dc83c5fb21",
+    "keyword": "a242761f52dd6a2bc070bf213dc4c0c3",
+    "answer": "No quiero ir a trabajar, tampoco bañarme, ni comer",
+    "options": {},
+    "from": "573155935407",
+    "refSerialize": "a242761f52dd6a2bc070bf213dc4c0c3"
+  }
+]

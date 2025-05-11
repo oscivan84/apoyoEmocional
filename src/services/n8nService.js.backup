@@ -1,0 +1,66 @@
+// src/services/n8nService.js
+const axios = require('axios');
+
+class N8NService {
+    constructor() {
+        // URL por defecto de n8n
+        this.baseUrl = process.env.N8N_URL || 'http://localhost:5678';
+        this.webhookPath = process.env.N8N_WEBHOOK_PATH || '/webhook/test';
+        this.apiKey = process.env.N8N_API_KEY || '';
+        this.maxRetries = 3;
+    }
+
+    async sendToN8N(sender, message) {
+        console.log('\n?? Iniciando envío a n8n...');
+        console.log('URL:', this.baseUrl + this.webhookPath);
+
+        const payload = {
+            sender: sender,
+            message: message,
+            timestamp: new Date().toISOString()
+        };
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'X-API-KEY': this.apiKey
+            },
+            timeout: 10000 // 10 segundos
+        };
+
+        for (let attempt = 1; attempt <= this.maxRetries; attempt++) {
+            try {
+                console.log(?? Intento  de envío a n8n);
+                
+                const response = await axios.post(
+                    this.baseUrl + this.webhookPath,
+                    payload,
+                    config
+                );
+
+                console.log('? Mensaje enviado exitosamente a n8n:', {
+                    status: response.status,
+                    data: response.data
+                });
+
+                return response.data;
+
+            } catch (error) {
+                console.error(? Error en intento :, {
+                    message: error.message,
+                    response: error.response?.data,
+                    status: error.response?.status
+                });
+
+                if (attempt === this.maxRetries) {
+                    throw new Error(Error en envío a n8n después de  intentos: );
+                }
+
+                // Esperar antes del siguiente intento (exponential backoff)
+                await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, attempt - 1)));
+            }
+        }
+    }
+}
+
+module.exports = new N8NService();

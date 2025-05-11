@@ -1,22 +1,83 @@
-### CHATBOT Whatsapp (Baileys Provider)
+Objetivo:
+Registrar automáticamente cada mensaje entrante del usuario en la base de datos PostgreSQL con información útil como:
 
-<p align="center">
-  <img width="300" src="https://i.imgur.com/Oauef6t.png">
-</p>
+número de teléfono
 
+mensaje recibido
 
-**Con esta librería, puedes construir flujos automatizados de conversación de manera agnóstica al proveedor de WhatsApp,** configurar respuestas automatizadas para preguntas frecuentes, recibir y responder mensajes de manera automatizada, y hacer un seguimiento de las interacciones con los clientes.  Además, puedes configurar fácilmente disparadores que te ayudaran a expandir las funcionalidades sin límites. **[Ver documentación](https://bot-whatsapp.netlify.app/)**
+fecha/hora
 
+ID de sesión
 
-```
-npm install
-npm start
-```
+estado actual del flujo (si aplica)
 
----
-## Recursos
-- [📄 Documentación](https://bot-whatsapp.netlify.app/)
-- [🚀 Roadmap](https://github.com/orgs/codigoencasa/projects/1)
-- [💻 Discord](https://link.codigoencasa.com/DISCORD)
-- [👌 Twitter](https://twitter.com/leifermendez)
-- [🎥 Youtube](https://www.youtube.com/watch?v=5lEMCeWEJ8o&list=PL_WGMLcL4jzWPhdhcUyhbFU6bC0oJd2BR)
+📂 Estructura propuesta
+Agrega este nuevo archivo dentro de src/services/:
+
+css
+Copiar
+Editar
+src/
+  services/
+    messageLoggerService.js  <-- Nuevo
+🧠 Paso 1: Crear el servicio messageLoggerService.js
+js
+Copiar
+Editar
+// src/services/messageLoggerService.js
+const { Pool } = require('pg');
+const dbConfig = require('../config/db'); // Tu configuración DB centralizada
+
+const pool = new Pool(dbConfig);
+
+async function logIncomingMessage({ from, message, flowState }) {
+  try {
+    await pool.query(
+      `INSERT INTO mensajes_entrantes (telefono, mensaje, estado_flujo, fecha) VALUES ($1, $2, $3, NOW())`,
+      [from, message, flowState || null]
+    );
+  } catch (error) {
+    console.error('Error al guardar el mensaje en PostgreSQL:', error);
+  }
+}
+
+module.exports = {
+  logIncomingMessage,
+};
+Asegúrate de que exista la tabla mensajes_entrantes en PostgreSQL:
+
+sql
+Copiar
+Editar
+CREATE TABLE IF NOT EXISTS mensajes_entrantes (
+  id SERIAL PRIMARY KEY,
+  telefono VARCHAR(20),
+  mensaje TEXT,
+  estado_flujo TEXT,
+  fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+⚙️ Paso 2: Invocar el logger desde flows.js
+Abre tu archivo flows.js y en el bloque principal donde capturas mensajes entrantes, agrega el logger.
+
+js
+Copiar
+Editar
+const { logIncomingMessage } = require('./src/services/messageLoggerService');
+
+// Dentro de tu flujo principal o función que procesa los mensajes:
+const flujoPrincipal = addKeyword(['hola', 'buenas', 'info'])
+  .addAction(async (ctx, { flowDynamic, state }) => {
+    const userPhone = ctx.from;
+    const message = ctx.body;
+    const currentState = await state.get('current') || 'inicio';
+
+    // Guardar mensaje entrante
+    await logIncomingMessage({
+      from: userPhone,
+      message,
+      flowState: currentState,
+    });
+
+    await flowDynamic('¡Hola! ¿En qué te puedo ayudar hoy? 😊');
+  });
+Esto funciona bien incluso si tienes varios flujos divididos. Puedes invocar logIncomingMessage en cada punto de entrada o usar un wrapper.

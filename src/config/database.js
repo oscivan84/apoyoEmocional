@@ -1,25 +1,34 @@
 // src/config/database.js
-const { Client } = require('pg');
+const { Pool } = require('pg');
 
-const dbConfig = {
-  user: 'admin',
-  host: 'localhost',
-  database: 'botwsp1.3',
-  password: 'portIvan*.2015ñ',
-  port: 5432
+const pool = new Pool({
+    host: 'localhost',
+    port: 5432,
+    user: 'admin',
+    password: 'portIvan*.2015',
+    database: 'botwsp13',
+    max: 20,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 2000,
+});
+
+// Agregar listener para errores de conexión
+pool.on('error', (err) => {
+    console.error('❌ Error inesperado en el pool de BD:', err);
+});
+
+// Función para probar la conexión
+const testConnection = async () => {
+    try {
+        const client = await pool.connect();
+        const result = await client.query('SELECT NOW()');
+        console.log('✅ Test de conexión exitoso:', result.rows[0]);
+        client.release();
+        return true;
+    } catch (error) {
+        console.error('❌ Error en test de conexión:', error);
+        return false;
+    }
 };
 
-const client = new Client(dbConfig);
-
-// Conectar al iniciar la aplicación
-const connectDB = async () => {
-  try {
-    await client.connect();
-    console.log('Conexión exitosa a la base de datos');
-  } catch (error) {
-    console.error('Error al conectar a la base de datos:', error);
-    process.exit(1);
-  }
-};
-
-module.exports = { client, connectDB };
+module.exports = { pool, testConnection };

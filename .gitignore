@@ -1,4 +1,6 @@
 node_modules/
+backups/
+bot_sessions/
 .env
 .DS_Store
 *.log

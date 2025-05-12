@@ -1,4 +1,3 @@
-// app.js
 const express = require('express');
 const { createBot, createProvider, createFlow } = require('@bot-whatsapp/bot');
 const QRPortalWeb = require('@bot-whatsapp/portal');
@@ -11,27 +10,46 @@ const n8nService = require('./src/services/n8nService');
 const app = express();
 app.use(express.json());
 
-// FunciÃ³n para manejar mensajes
+// Variable global para el provider
+let globalProvider = null;
+
+// Función para enviar mensaje por WhatsApp
+const sendWhatsAppMessage = async (phone, message) => {
+    if (!globalProvider) {
+        throw new Error('WhatsApp provider no está inicializado');
+    }
+
+    try {
+        console.log('?? Enviando mensaje a WhatsApp:', { phone, message });
+        await globalProvider.sendMessage(phone, { text: message });
+        console.log('? Mensaje enviado exitosamente');
+    } catch (error) {
+        console.error('? Error al enviar mensaje:', error);
+        throw error;
+    }
+};
+
+// Función para manejar mensajes
 const handleMessage = async (from, message) => {
-    console.log('\nðŸ“¨ Nuevo mensaje recibido:', { from, message });
+    console.log('\n?? Nuevo mensaje recibido:', { from, message });
 
     try {
         // 1. Guardar en BD
         const savedMessage = await messageService.saveMessage(from, message);
-        console.log('ðŸ’¾ Mensaje guardado en BD:', savedMessage);
+        console.log('?? Mensaje guardado en BD:', savedMessage);
 
         // 2. Enviar a n8n
         try {
-            console.log('ðŸ”„ Intentando enviar a n8n...');
+            console.log('?? Intentando enviar a n8n...');
             const n8nResponse = await n8nService.sendToN8N(from, message);
-            console.log('âœ… Mensaje enviado a n8n:', n8nResponse);
+            console.log('? Mensaje enviado a n8n:', n8nResponse);
             return n8nResponse;
         } catch (n8nError) {
-            console.error('âŒ Error enviando a n8n:', n8nError.message);
+            console.error('? Error enviando a n8n:', n8nError.message);
             throw n8nError;
         }
     } catch (error) {
-        console.error('âŒ Error procesando mensaje:', error);
+        console.error('? Error procesando mensaje:', error);
         throw error;
     }
 };
@@ -41,15 +59,18 @@ const main = async () => {
     const adapterFlow = createFlow([]);
     const adapterProvider = createProvider(BaileysProvider);
 
+    // Guardar el provider en la variable global
+    globalProvider = adapterProvider;
+
     // Manejar mensajes de WhatsApp
     adapterProvider.on('message', async (msg) => {
         if (msg.from === 'status@broadcast' || msg.from === adapterProvider.number) return;
 
         try {
             const response = await handleMessage(msg.from, msg.body);
-            console.log('âœ… Mensaje procesado completamente:', response);
+            console.log('? Mensaje procesado completamente:', response);
         } catch (error) {
-            console.error('âŒ Error en el procesamiento:', error.message);
+            console.error('? Error en el procesamiento:', error.message);
         }
     });
 
@@ -62,7 +83,63 @@ const main = async () => {
     QRPortalWeb();
 };
 
-// Ruta webhook
+// Ruta para recibir respuestas de n8n
+app.post('/api/n8n-webhook', async (req, res) => {
+    console.log('\n?? Webhook de n8n recibido:', req.body);
+    
+    try {
+        const { action, data } = req.body;
+
+        if (!action || !data) {
+            return res.status(400).json({
+                error: 'Formato inválido',
+                expectedFormat: {
+                    action: 'send_message',
+                    data: {
+                        phone: 'número_de_teléfono',
+                        message: 'mensaje_a_enviar'
+                    }
+                }
+            });
+        }
+
+        if (action === 'send_message') {
+            const { phone, message } = data;
+            
+            if (!phone || !message) {
+                return res.status(400).json({
+                    error: 'Se requieren phone y message en data'
+                });
+            }
+
+            try {
+                await sendWhatsAppMessage(phone, message);
+                await messageService.updateMessageResponse(phone, message, message);
+                
+                res.json({
+                    success: true,
+                    message: 'Mensaje enviado y guardado correctamente'
+                });
+            } catch (error) {
+                console.error('? Error procesando mensaje:', error);
+                res.status(500).json({
+                    error: 'Error al procesar el mensaje',
+                    details: error.message
+                });
+            }
+        } else {
+            res.status(400).json({
+                error: 'Acción no soportada',
+                supportedActions: ['send_message']
+            });
+        }
+    } catch (error) {
+        console.error('? Error en webhook:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Ruta webhook original
 app.post('/webhook', async (req, res) => {
     try {
         const { from, body, message, sender } = req.body;
@@ -86,6 +163,6 @@ app.post('/webhook', async (req, res) => {
 
 const PORT = process.env.PORT || 3080;
 app.listen(PORT, () => {
-    console.log(`ðŸš€ Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`?? Servidor corriendo en http://localhost:${PORT}`);
     main().catch(console.error);
 });

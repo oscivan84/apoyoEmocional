@@ -13,6 +13,15 @@ app.use(express.json());
 // Variable global para el provider
 let globalProvider = null;
 
+// Función para formatear número de teléfono
+const formatPhoneNumber = (phone) => {
+    let cleaned = phone.toString().replace(/\D/g, '');
+    if (!cleaned.endsWith('@s.whatsapp.net')) {
+        cleaned = `${cleaned}@s.whatsapp.net`;
+    }
+    return cleaned;
+};
+
 // Función para enviar mensaje por WhatsApp
 const sendWhatsAppMessage = async (phone, message) => {
     if (!globalProvider) {
@@ -20,8 +29,14 @@ const sendWhatsAppMessage = async (phone, message) => {
     }
 
     try {
-        console.log('?? Enviando mensaje a WhatsApp:', { phone, message });
-        await globalProvider.sendMessage(phone, { text: message });
+        const formattedPhone = formatPhoneNumber(phone);
+        console.log('?? Enviando mensaje a WhatsApp:', { phone: formattedPhone, message });
+        
+        // Usar el método correcto del provider
+        await globalProvider.vendor.sendMessage(formattedPhone, {
+            text: message
+        });
+        
         console.log('? Mensaje enviado exitosamente');
     } catch (error) {
         console.error('? Error al enviar mensaje:', error);
@@ -113,7 +128,10 @@ app.post('/api/n8n-webhook', async (req, res) => {
             }
 
             try {
+                // 1. Enviar mensaje por WhatsApp
                 await sendWhatsAppMessage(phone, message);
+                
+                // 2. Actualizar en la base de datos
                 await messageService.updateMessageResponse(phone, message, message);
                 
                 res.json({

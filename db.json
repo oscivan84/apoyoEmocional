@@ -1,26 +1,18 @@
 [
   {
-    "ref": "48c95015-f5e5-44b8-a4f7-8cc25a16923f",
-    "keyword": "7ba487f973583c6529da922aca71fd84",
-    "answer": "es real?",
+    "ref": "f3d62764-fee6-4efa-85a6-8f84b52ddfd2",
+    "keyword": "c4af9dbd2d19f04ef5c4a620d71c70b6",
+    "answer": "los planes estan muy caros",
     "options": {},
     "from": "573155935407",
-    "refSerialize": "cf5cb985d1598d5898b13cd9ef6d9b33"
+    "refSerialize": "137c99c9b7eefd1b81eb11c062c6ed8e"
   },
   {
-    "ref": "1f6a324f-71ba-49f2-bcb3-0d5f2fcfda8a",
-    "keyword": "cf5cb985d1598d5898b13cd9ef6d9b33",
-    "answer": "hola",
+    "ref": "4fe71447-219f-48db-a8a3-77050c68da32",
+    "keyword": "137c99c9b7eefd1b81eb11c062c6ed8e",
+    "answer": "¿aun estas ?",
     "options": {},
     "from": "573155935407",
-    "refSerialize": "79e7fc16f7fb85373fd25a99390f44c0"
-  },
-  {
-    "ref": "0e6abe1c-4035-4977-a9c4-9c170647700b",
-    "keyword": "79e7fc16f7fb85373fd25a99390f44c0",
-    "answer": "Hola, estoy bien",
-    "options": {},
-    "from": "573155935407",
-    "refSerialize": "bd8608150778b0dc850daad7ddb057ca"
+    "refSerialize": "01471b26bb941c54a5c0af335af9c39e"
   }
 ]

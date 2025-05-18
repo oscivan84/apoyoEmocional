@@ -1,0 +1,151 @@
+{
+  "name": "botws13",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp"
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "id": "ec1f5c66-09f3-4d91-89fd-43680809e7ac",
+      "name": "Webhook",
+      "webhookId": "7f7dac8b-734d-4179-aff6-ce945ffe1524"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validación y sanitización de entrada\nconst input = $input.first().json.body;\n\n// Validar campos requeridos\nif (!input || !input.from || !input.message) {\n  return [{\n    json: {\n      error: 'Campos requeridos faltantes',\n      status: 400\n    }\n  }];\n}\n\n// Sanitizar y validar número de teléfono\nconst cleanPhone = input.from.replace(/\\D/g, '');\n\n// Detectar intención del mensaje\nconst intents = {\n  pregunta: /\\?$/,\n  saludo: /^(hola|buenos días|buenas tardes|buenas noches)/i,\n  despedida: /(adiós|chao|hasta luego|nos vemos)/i,\n  emergencia: /(urgente|emergencia|ayuda|socorro)/i\n};\n\nconst intent = Object.entries(intents).find(([_, regex]) => \n  regex.test(input.message)\n)?.[0] || 'conversacion';\n\n// Timestamp en formato ISO\nconst timestamp = new Date().toISOString();\n\nreturn [{\n  json: {\n    sender: cleanPhone,\n    mensaje: input.message.trim(),  // Cambiado de message a mensaje\n    intent,\n    timestamp,\n    priority: intent === 'emergencia' ? 'high' : 'normal'\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [180, -20],
+      "id": "047ce904-6f8e-403b-af0c-523cddc10dac",
+      "name": "Input Validation"
+    },
+    {
+      "parameters": {
+        "model": "mistral:latest",
+        "temperature": 0.7,
+        "maxTokens": 2000,
+        "topP": 0.95,
+        "frequencyPenalty": 0.5,
+        "presencePenalty": 0.5
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [700, 260],
+      "id": "eecb615d-bc19-46bc-bb32-f0740669059b",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "ldDUJCn0xrzFIfvB",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sender }}",
+        "tableName": "interacciones",
+        "contextWindowLength": 5,
+        "summarizeAfter": 15,
+        "columnNames": {
+          "sessionId": "numero_telefono",
+          "userInput": "mensaje",
+          "botResponse": "respuesta",
+          "timestamp": "fecha_creacion"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [520, 200],
+      "id": "67846270-0ce4-4a8d-be2f-8f91432cc0e5",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "9EYEOZp2dTJBViHZ",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Eres un asistente empático y profesional. Analiza el siguiente contexto:\n\nUsuario: {{$json.sender}}\nIntención detectada: {{$json.intent}}\nPrioridad: {{$json.priority}}\nHistorial reciente: {{$('Postgres Chat Memory').item.json.chatHistory}}\n\nMensaje actual: {{$json.mensaje}}\n\nResponde de manera empática, profesional y concisa, manteniendo el contexto de la conversación.",
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 500
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [700, 60],
+      "id": "ai-response-generator",
+      "name": "AI Response Generator"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Procesamiento de respuesta\nconst response = $input.first().json;\n\n// Validación de respuesta\nif (!response || !response.output) {\n  return [{\n    json: {\n      error: 'Respuesta inválida del modelo',\n      status: 500\n    }\n  }];\n}\n\n// Formateo y limpieza\nlet mensaje = response.output\n  .replace(/[\\n\\r\\t]/g, ' ')\n  .replace(/\\s{2,}/g, ' ')\n  .trim();\n\n// Logging y métricas\nconst metrics = {\n  responseTime: Date.now() - new Date($json.timestamp).getTime(),\n  messageLength: mensaje.length,\n  intent: $json.intent,\n  priority: $json.priority\n};\n\nreturn [{\n  json: {\n    mensaje,\n    metrics,\n    sender: $json.sender,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [840, 60],
+      "id": "response-processor",
+      "name": "Response Processor"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:3080/api/n8n-webhook",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-webhook-token",
+              "value": "portIvan2015"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"action\": \"send_message\",\n  \"data\": {\n    \"phone\": \"{{ $json.sender }}\",\n    \"message\": \"{{ $json.mensaje }}\"\n  },\n  \"metadata\": {\n    \"intent\": \"{{ $json.metrics.intent }}\",\n    \"priority\": \"{{ $json.metrics.priority }}\",\n    \"responseTime\": {{ $json.metrics.responseTime }}\n  }\n}"
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1120, 60],
+      "id": "message-sender",
+      "name": "Message Sender"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [["Input Validation"]]
+    },
+    "Input Validation": {
+      "main": [["Postgres Chat Memory"]]
+    },
+    "Postgres Chat Memory": {
+      "main": [["AI Response Generator"]],
+      "ai_memory": [["AI Response Generator"]]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [["AI Response Generator"]]
+    },
+    "AI Response Generator": {
+      "main": [["Response Processor"]]
+    },
+    "Response Processor": {
+      "main": [["Message Sender"]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": ["chatbot", "production"]
+}

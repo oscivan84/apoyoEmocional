@@ -1,83 +1,55 @@
-Objetivo:
-Registrar automáticamente cada mensaje entrante del usuario en la base de datos PostgreSQL con información útil como:
+1. Crear el módulo de servicio audioService.js
+Ubicación sugerida: src/services/audioService.js
 
-número de teléfono
+Este servicio se encargará de manejar la descarga, almacenamiento y respuesta de los audios.
 
-mensaje recibido
+2. Detectar mensajes de tipo audioMessage
+Dentro del archivo messageService.js, agrega una verificación de si el mensaje recibido tiene audioMessage.
 
-fecha/hora
-
-ID de sesión
-
-estado actual del flujo (si aplica)
-
-📂 Estructura propuesta
-Agrega este nuevo archivo dentro de src/services/:
-
-css
-Copiar
-Editar
-src/
-  services/
-    messageLoggerService.js  <-- Nuevo
-🧠 Paso 1: Crear el servicio messageLoggerService.js
 js
 Copiar
 Editar
-// src/services/messageLoggerService.js
-const { Pool } = require('pg');
-const dbConfig = require('../config/db'); // Tu configuración DB centralizada
-
-const pool = new Pool(dbConfig);
-
-async function logIncomingMessage({ from, message, flowState }) {
-  try {
-    await pool.query(
-      `INSERT INTO mensajes_entrantes (telefono, mensaje, estado_flujo, fecha) VALUES ($1, $2, $3, NOW())`,
-      [from, message, flowState || null]
-    );
-  } catch (error) {
-    console.error('Error al guardar el mensaje en PostgreSQL:', error);
-  }
+if (msg.audioMessage) {
+    await audioService.handleAudioMessage(message, sock);
 }
-
-module.exports = {
-  logIncomingMessage,
-};
-Asegúrate de que exista la tabla mensajes_entrantes en PostgreSQL:
-
-sql
-Copiar
-Editar
-CREATE TABLE IF NOT EXISTS mensajes_entrantes (
-  id SERIAL PRIMARY KEY,
-  telefono VARCHAR(20),
-  mensaje TEXT,
-  estado_flujo TEXT,
-  fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-⚙️ Paso 2: Invocar el logger desde flows.js
-Abre tu archivo flows.js y en el bloque principal donde capturas mensajes entrantes, agrega el logger.
+3. Implementar función handleAudioMessage()
+En audioService.js, crea la función para manejar el audio:
 
 js
 Copiar
 Editar
-const { logIncomingMessage } = require('./src/services/messageLoggerService');
+async function handleAudioMessage(message, sock) {
+    // descarga, guarda y responde
+}
+4. Usar downloadMediaMessage() de Baileys
+Utiliza la función proporcionada por Baileys para descargar el audio recibido en formato buffer.
 
-// Dentro de tu flujo principal o función que procesa los mensajes:
-const flujoPrincipal = addKeyword(['hola', 'buenas', 'info'])
-  .addAction(async (ctx, { flowDynamic, state }) => {
-    const userPhone = ctx.from;
-    const message = ctx.body;
-    const currentState = await state.get('current') || 'inicio';
+5. Guardar el audio en el sistema de archivos
+Almacena el audio descargado en una carpeta como audios/ con un nombre basado en el timestamp y el remoteJid para identificación.
 
-    // Guardar mensaje entrante
-    await logIncomingMessage({
-      from: userPhone,
-      message,
-      flowState: currentState,
-    });
+6. Registrar logs con winston
+Incluye logs en audioService.js para audios recibidos, nombre de archivo, duración, etc.
 
-    await flowDynamic('¡Hola! ¿En qué te puedo ayudar hoy? 😊');
-  });
-Esto funciona bien incluso si tienes varios flujos divididos. Puedes invocar logIncomingMessage en cada punto de entrada o usar un wrapper.
+7. Enviar una respuesta automática
+Envía una respuesta al usuario informando que el audio ha sido recibido y se está procesando.
+
+js
+Copiar
+Editar
+await sock.sendMessage(message.key.remoteJid, {
+    text: "🎧 Hemos recibido tu audio. Lo estamos procesando..."
+});
+8. Opcional: preparar transcripción (con placeholder)
+Deja preparada una función como transcribeAudio() (aunque aún no la implementes) para añadir compatibilidad con servicios como Whisper o Google Speech-to-Text.
+
+9. Añadir pruebas unitarias en tests/unit/audioService.test.js
+Cubre escenarios como:
+
+Audio recibido correctamente
+
+Fallo al guardar
+
+Archivo inválido
+
+10. Actualizar documentación del proyecto
+Agrega al README.md o documento de arquitectura una sección sobre el nuevo módulo audioService, su flujo y cómo se integra.

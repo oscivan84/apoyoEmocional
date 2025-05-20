@@ -1,26 +1,18 @@
 [
   {
-    "ref": "48c95015-f5e5-44b8-a4f7-8cc25a16923f",
-    "keyword": "7ba487f973583c6529da922aca71fd84",
-    "answer": "es real?",
+    "ref": "cb82f9aa-242c-44b9-96d7-4ac1ab70d6b2",
+    "keyword": "4498f0e39e3efdd9bea196e63b42d5ff",
+    "answer": "Hola",
     "options": {},
     "from": "573155935407",
-    "refSerialize": "cf5cb985d1598d5898b13cd9ef6d9b33"
+    "refSerialize": "c22e4066d61d81721def9b25d8a397e8"
   },
   {
-    "ref": "1f6a324f-71ba-49f2-bcb3-0d5f2fcfda8a",
-    "keyword": "cf5cb985d1598d5898b13cd9ef6d9b33",
-    "answer": "hola",
+    "ref": "20bff097-b30e-42a2-9605-1da371610828",
+    "keyword": "c22e4066d61d81721def9b25d8a397e8",
+    "answer": "Hola",
     "options": {},
     "from": "573155935407",
-    "refSerialize": "79e7fc16f7fb85373fd25a99390f44c0"
-  },
-  {
-    "ref": "0e6abe1c-4035-4977-a9c4-9c170647700b",
-    "keyword": "79e7fc16f7fb85373fd25a99390f44c0",
-    "answer": "Hola, estoy bien",
-    "options": {},
-    "from": "573155935407",
-    "refSerialize": "bd8608150778b0dc850daad7ddb057ca"
+    "refSerialize": "c22e4066d61d81721def9b25d8a397e8"
   }
 ]

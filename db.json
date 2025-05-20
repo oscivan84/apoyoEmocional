@@ -1,18 +1,42 @@
 [
   {
-    "ref": "cb82f9aa-242c-44b9-96d7-4ac1ab70d6b2",
-    "keyword": "4498f0e39e3efdd9bea196e63b42d5ff",
-    "answer": "Hola",
+    "ref": "6da3d317-066c-4979-a82c-a956150f769a",
+    "keyword": "89333ac47aca1c8fc6d9bee02fbd88b2",
+    "answer": "hola",
     "options": {},
     "from": "573155935407",
-    "refSerialize": "c22e4066d61d81721def9b25d8a397e8"
+    "refSerialize": "79e7fc16f7fb85373fd25a99390f44c0"
   },
   {
-    "ref": "20bff097-b30e-42a2-9605-1da371610828",
-    "keyword": "c22e4066d61d81721def9b25d8a397e8",
-    "answer": "Hola",
-    "options": {},
+    "ref": "ans_e972fb4d-7271-4b03-934b-93bf475fcf7d",
+    "keyword": "key_05d30db8-3835-4a01-9fcd-f5c7949630ae",
+    "answer": "__call_action__",
+    "options": {
+      "media": null,
+      "buttons": [],
+      "capture": false,
+      "child": null,
+      "delay": 0,
+      "idle": null,
+      "ref": null,
+      "nested": [],
+      "keyword": {},
+      "callback": true
+    },
+    "refSerialize": "7e314c44eecc52a21b5f7dc2e4ea3aa2",
+    "from": "573155935407"
+  },
+  {
+    "ref": "c0599587-bde8-41fd-b092-303b2e98afe8",
+    "keyword": null,
+    "answer": "�Hola! �En qu� te puedo ayudar hoy? ??",
+    "options": {
+      "media": null,
+      "buttons": [],
+      "capture": false,
+      "delay": 0
+    },
     "from": "573155935407",
-    "refSerialize": "c22e4066d61d81721def9b25d8a397e8"
+    "refSerialize": "f03a94846b023daa8127d6ef7c7be047"
   }
 ]

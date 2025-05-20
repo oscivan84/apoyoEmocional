@@ -1,5 +1,5 @@
 const express = require('express');
-const { createBot, createProvider, createFlow, addKeyword } = require('@bot-whatsapp/bot');
+const { createBot, createProvider, createFlow } = require('@bot-whatsapp/bot');
 // Portal QR usando qrcode-terminal
 const qrcode = require('qrcode-terminal');
 const BaileysProvider = require('@bot-whatsapp/provider/baileys');
@@ -212,6 +212,5 @@ app.listen(PORT, () => {
     console.log(`?? Servidor corriendo en http://localhost:${PORT}`);
     main().catch(console.error);
 });
-
 
 

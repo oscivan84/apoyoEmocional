@@ -59,4 +59,3 @@ class N8NService {
 }
 
 module.exports = new N8NService();
-

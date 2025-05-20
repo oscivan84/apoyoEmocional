@@ -1,15 +1,15 @@
 [
   {
-    "ref": "6da3d317-066c-4979-a82c-a956150f769a",
-    "keyword": "89333ac47aca1c8fc6d9bee02fbd88b2",
-    "answer": "hola",
+    "ref": "6b17e1f6-f6cf-4571-b8db-f6cf58350fb0",
+    "keyword": "7e314c44eecc52a21b5f7dc2e4ea3aa2",
+    "answer": "hola, requiero informacion",
     "options": {},
     "from": "573155935407",
-    "refSerialize": "79e7fc16f7fb85373fd25a99390f44c0"
+    "refSerialize": "f98728839e0dc8c88a374e5328bdd0c8"
   },
   {
-    "ref": "ans_e972fb4d-7271-4b03-934b-93bf475fcf7d",
-    "keyword": "key_05d30db8-3835-4a01-9fcd-f5c7949630ae",
+    "ref": "ans_8dd83cb9-a2e1-45f2-88c1-a60cae683627",
+    "keyword": "key_e94639e5-b40f-44c3-800a-0c286010ebd5",
     "answer": "__call_action__",
     "options": {
       "media": null,
@@ -23,11 +23,11 @@
       "keyword": {},
       "callback": true
     },
-    "refSerialize": "7e314c44eecc52a21b5f7dc2e4ea3aa2",
+    "refSerialize": "cb2a9d1ed8ffa79966eb794790ff6aac",
     "from": "573155935407"
   },
   {
-    "ref": "c0599587-bde8-41fd-b092-303b2e98afe8",
+    "ref": "d3580ef0-e8cb-411f-9be2-0861090c1708",
     "keyword": null,
     "answer": "�Hola! �En qu� te puedo ayudar hoy? ??",
     "options": {
@@ -38,5 +38,13 @@
     },
     "from": "573155935407",
     "refSerialize": "f03a94846b023daa8127d6ef7c7be047"
+  },
+  {
+    "ref": "2b777a47-3402-461f-ac5c-ecc2ced788cb",
+    "keyword": "cb2a9d1ed8ffa79966eb794790ff6aac",
+    "answer": "_event_voice_note__9721115e-4045-4ae2-a844-6ea83dde460d",
+    "options": {},
+    "from": "573155935407",
+    "refSerialize": "1e26deaf9ec268da50dcbb6ce1d66e2c"
   }
 ]

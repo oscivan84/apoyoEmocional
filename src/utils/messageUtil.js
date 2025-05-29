@@ -1,6 +1,6 @@
-ï»¿// src/utils/messageUtil.js
+// src/utils/messageUtil.js
 const path = require('path');
-const fs = require('fs').promises;
+const fs = require('fs');
 
 /**
  * Procesa y clasifica diferentes tipos de mensajes
@@ -21,18 +21,19 @@ class MessageUtil {
 
         switch (messageType) {
             case 'voice':
-                processedMessage.content = 'Nota de voz recibida';
+                processedMessage.content = '[mensaje de voz]';
                 processedMessage.metadata = {
-                    duration: ctx.message?.duration || 0,
+                    duration: ctx.message?.seconds || 0,
                     mimeType: ctx.message?.mimetype || 'audio/ogg',
-                    id: this.extractVoiceNoteId(ctx.body)
+                    id: this.extractVoiceNoteId(ctx.body || ''),
+                    messageObj: ctx.message // Incluir el objeto de mensaje completo para descarga
                 };
                 break;
             case 'text':
-                processedMessage.content = ctx.body;
+                processedMessage.content = ctx.body || '';
                 break;
             default:
-                processedMessage.content = ctx.body;
+                processedMessage.content = ctx.body || '';
                 processedMessage.type = 'unknown';
         }
 
@@ -45,10 +46,26 @@ class MessageUtil {
      * @returns {string} Tipo de mensaje
      */
     static getMessageType(ctx) {
-        if (ctx.body && ctx.body.includes('_event_voice_note__')) {
+        // Detectar mensajes de voz por diferentes métodos
+        if (
+            ctx.message?.audioMessage || 
+            ctx.message?.pttMessage || 
+            (ctx.message && ctx.message.mimetype && ctx.message.mimetype.includes('audio')) ||
+            (ctx.body && typeof ctx.body === 'string' && ctx.body.includes('_event_voice_note__'))
+        ) {
             return 'voice';
         }
-        return 'text';
+        
+        // Detectar mensajes de texto
+        if (
+            ctx.message?.conversation || 
+            ctx.message?.extendedTextMessage || 
+            (ctx.body && typeof ctx.body === 'string')
+        ) {
+            return 'text';
+        }
+        
+        return 'unknown';
     }
 
     /**
@@ -57,6 +74,7 @@ class MessageUtil {
      * @returns {string} ID de la nota de voz
      */
     static extractVoiceNoteId(message) {
+        if (typeof message !== 'string') return '';
         const match = message.match(/_event_voice_note__([a-f0-9-]+)/);
         return match ? match[1] : '';
     }

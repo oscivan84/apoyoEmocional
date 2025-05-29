@@ -74,7 +74,7 @@ bash
 src/
   services/
     messageLoggerService.js      ← Guarda mensaje/transcripción/audio
-    voiceTranscriptionService.js ← Maneja transcripción (Whisper, etc)
+    voiceTranscriptionService.js ← Maneja transcripción (vosk)
   utils/
     messageUtil.js               ← Detecta tipo de mensaje
   controllers/
@@ -87,7 +87,7 @@ txt
 1. WhatsApp recibe mensaje de voz (audio/ogg)
 2. Se detecta como tipo `voice`
 3. Se descarga y guarda temporalmente el audio
-4. Se transcribe el audio a texto (Whisper API u otro)
+4. Se transcribe el audio a texto (vosk API )
 5. Se guarda en PostgreSQL:
     - tipo = voice
     - mensaje = "[mensaje de voz]"
@@ -96,3 +96,38 @@ txt
 
 
 Debes responder con un script para ser ejecutado en powershell.
+
+
+ejemplo
+
+const fs = require('fs');
+const vosk = require('vosk');
+const path = require('path');
+const { Readable } = require('stream');
+
+const MODEL_PATH = './vosk-model-small-es-0.42';
+const AUDIO_FILE = './audio.wav'; // Debe ser WAV mono PCM 16kHz
+
+vosk.setLogLevel(0);
+
+if (!fs.existsSync(MODEL_PATH)) {
+  console.error('❌ Modelo no encontrado. Descárgalo desde https://alphacephei.com/vosk/models');
+  process.exit(1);
+}
+
+const model = new vosk.Model(MODEL_PATH);
+const sampleRate = 16000;
+const rec = new vosk.Recognizer({ model, sampleRate });
+
+const wfReader = fs.createReadStream(AUDIO_FILE, { highWaterMark: 4096 });
+
+wfReader.on('data', (data) => {
+  rec.acceptWaveform(data);
+});
+
+wfReader.on('end', () => {
+  const result = rec.finalResult();
+  console.log('✅ Transcripción:', result.text);
+  rec.free();
+  model.free();
+});

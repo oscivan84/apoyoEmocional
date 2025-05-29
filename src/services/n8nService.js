@@ -1,18 +1,19 @@
-﻿// src/services/n8nService.js
+// src/services/n8nService.js
 const axios = require('axios');
 const MessageUtil = require('../utils/messageUtil');
 
 class N8NService {
     constructor() {
-        this.webhookUrl = 'http://localhost:5678/webhook-test/whatsapp';
+        this.webhookUrl = process.env.N8N_WEBHOOK_URL || 'http://localhost:5678/webhook-test/whatsapp';
     }
 
     async sendToN8N(from, message, originalContext = null) {
-        console.log('\n🔄 [N8N] Preparando envío:', { from, message });
+        console.log('\n?? [N8N] Preparando env�o:', { from, message });
 
         let processedMessage = message;
         let messageType = 'text';
         let metadata = {};
+        let transcripcion = null;
 
         // Procesar el mensaje si tenemos el contexto original
         if (originalContext) {
@@ -20,19 +21,29 @@ class N8NService {
             processedMessage = processed.content;
             messageType = processed.type;
             metadata = processed.metadata;
+            
+            // Si es un mensaje de voz y tiene transcripci�n, usarla
+            if (messageType === 'voice' && originalContext.transcripcion) {
+                transcripcion = originalContext.transcripcion;
+                console.log(`?? [N8N] Usando transcripci�n: "${transcripcion}"`);
+            }
         }
 
         const payload = {
             from,
-            message: processedMessage,
+            message: messageType === 'voice' && transcripcion ? transcripcion : processedMessage,
+            originalMessage: processedMessage,
             messageType,
-            metadata,
+            metadata: {
+                ...metadata,
+                transcripcion
+            },
             timestamp: new Date().toISOString()
         };
 
         try {
-            console.log('📤 [N8N] Enviando a:', this.webhookUrl);
-            console.log('📦 [N8N] Payload:', JSON.stringify(payload, null, 2));
+            console.log('?? [N8N] Enviando a:', this.webhookUrl);
+            console.log('?? [N8N] Payload:', JSON.stringify(payload, null, 2));
 
             const response = await axios({
                 method: 'POST',
@@ -44,11 +55,11 @@ class N8NService {
                 timeout: 5000
             });
 
-            console.log('✅ [N8N] Respuesta recibida');
+            console.log('? [N8N] Respuesta recibida');
             return response.data;
 
         } catch (error) {
-            console.error('❌ [N8N] Error:', {
+            console.error('? [N8N] Error:', {
                 message: error.message,
                 response: error.response?.data,
                 status: error.response?.status
@@ -59,4 +70,3 @@ class N8NService {
 }
 
 module.exports = new N8NService();
-

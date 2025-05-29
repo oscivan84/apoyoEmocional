@@ -1,50 +1,26 @@
 [
   {
-    "ref": "6b17e1f6-f6cf-4571-b8db-f6cf58350fb0",
-    "keyword": "7e314c44eecc52a21b5f7dc2e4ea3aa2",
-    "answer": "hola, requiero informacion",
+    "ref": "ca7d0ab6-d869-46ba-abdb-1530e96faa6a",
+    "keyword": "659d3bfe61bc686965fa5dd84b532922",
+    "answer": "Hooa",
     "options": {},
     "from": "573155935407",
-    "refSerialize": "f98728839e0dc8c88a374e5328bdd0c8"
+    "refSerialize": "0137561d9fd3f226c73acd2648b6e265"
   },
   {
-    "ref": "ans_8dd83cb9-a2e1-45f2-88c1-a60cae683627",
-    "keyword": "key_e94639e5-b40f-44c3-800a-0c286010ebd5",
-    "answer": "__call_action__",
-    "options": {
-      "media": null,
-      "buttons": [],
-      "capture": false,
-      "child": null,
-      "delay": 0,
-      "idle": null,
-      "ref": null,
-      "nested": [],
-      "keyword": {},
-      "callback": true
-    },
-    "refSerialize": "cb2a9d1ed8ffa79966eb794790ff6aac",
-    "from": "573155935407"
-  },
-  {
-    "ref": "d3580ef0-e8cb-411f-9be2-0861090c1708",
-    "keyword": null,
-    "answer": "�Hola! �En qu� te puedo ayudar hoy? ??",
-    "options": {
-      "media": null,
-      "buttons": [],
-      "capture": false,
-      "delay": 0
-    },
-    "from": "573155935407",
-    "refSerialize": "f03a94846b023daa8127d6ef7c7be047"
-  },
-  {
-    "ref": "2b777a47-3402-461f-ac5c-ecc2ced788cb",
-    "keyword": "cb2a9d1ed8ffa79966eb794790ff6aac",
-    "answer": "_event_voice_note__9721115e-4045-4ae2-a844-6ea83dde460d",
+    "ref": "b668fd54-5026-42a1-9bfa-564624c21af9",
+    "keyword": "0137561d9fd3f226c73acd2648b6e265",
+    "answer": "Me puedes ofrecer algo?",
     "options": {},
     "from": "573155935407",
-    "refSerialize": "1e26deaf9ec268da50dcbb6ce1d66e2c"
+    "refSerialize": "7ccbda7b22659b06d45e72abf9e651e2"
+  },
+  {
+    "ref": "e051fe1a-74ef-46f6-8771-24a354b0b4c3",
+    "keyword": "7ccbda7b22659b06d45e72abf9e651e2",
+    "answer": "Como estas hoy?",
+    "options": {},
+    "from": "573155935407",
+    "refSerialize": "0e5c0a80744802bbddf012fa19f5236a"
   }
 ]

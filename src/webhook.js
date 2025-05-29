@@ -6,7 +6,7 @@ const logger = require('./utils/logger');
 
 // Middleware para logging
 router.use((req, res, next) => {
-    console.log(\n📥 Nueva petición:  );
+    console.log("📥 Nueva petición: " );
     next();
 });
 

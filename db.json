@@ -22,5 +22,109 @@
     "options": {},
     "from": "573155935407",
     "refSerialize": "0e5c0a80744802bbddf012fa19f5236a"
+  },
+  {
+    "ref": "7ffb498c-791b-4a66-90c0-6a3b292c76f7",
+    "keyword": "0e5c0a80744802bbddf012fa19f5236a",
+    "answer": "Hola ¿Quien eres?",
+    "options": {},
+    "from": "573155935407",
+    "refSerialize": "20c9dacd81a8b88e93790fcf16954a31"
+  },
+  {
+    "ref": "ans_a2fe09d7-962d-45ac-b37c-164d865d2857",
+    "keyword": "key_b9e95cb7-4a8d-4ad0-827e-714a955ae52f",
+    "answer": "__call_action__",
+    "options": {
+      "media": null,
+      "buttons": [],
+      "capture": false,
+      "child": null,
+      "delay": 0,
+      "idle": null,
+      "ref": null,
+      "nested": [],
+      "keyword": {},
+      "callback": true
+    },
+    "refSerialize": "210d0128435c83e2def1365bd27fe193",
+    "from": "573155935407"
+  },
+  {
+    "ref": "9904aaad-4dcb-409e-a68e-d7c83017956a",
+    "keyword": null,
+    "answer": "�Hola! �En qu� te puedo ayudar hoy? ??",
+    "options": {
+      "media": null,
+      "buttons": [],
+      "capture": false,
+      "delay": 0
+    },
+    "from": "573155935407",
+    "refSerialize": "f03a94846b023daa8127d6ef7c7be047"
+  },
+  {
+    "ref": "f831fb0c-18c5-4569-bc39-9fed30f1ca4b",
+    "keyword": "210d0128435c83e2def1365bd27fe193",
+    "answer": "¿Me escuchas?",
+    "options": {},
+    "from": "573155935407",
+    "refSerialize": "b254ba371c4363865724a78c7b8fccbb"
+  },
+  {
+    "ref": "b8847cab-a5cb-4b12-a91a-d7ef2875bf8e",
+    "keyword": "b254ba371c4363865724a78c7b8fccbb",
+    "answer": "Como confiar en ti?",
+    "options": {},
+    "from": "573155935407",
+    "refSerialize": "96c63e35215295d9abc4232b2294c05f"
+  },
+  {
+    "ref": "35dede00-86b1-4722-9bbc-71d9a8d07d98",
+    "keyword": "96c63e35215295d9abc4232b2294c05f",
+    "answer": "Soy Javier. Me interesa obtener asesoría psicológica",
+    "options": {},
+    "from": "573155935407",
+    "refSerialize": "f81b962e4d672b46d22d715e2bd3a307"
+  },
+  {
+    "ref": "04e270e6-5945-4752-b024-89771cf9c5bc",
+    "keyword": "f81b962e4d672b46d22d715e2bd3a307",
+    "answer": "Soy Javier. Me interesa obtener asesoría psicológica",
+    "options": {},
+    "from": "573155935407",
+    "refSerialize": "f81b962e4d672b46d22d715e2bd3a307"
+  },
+  {
+    "ref": "eca5d1a1-1ddd-40be-940e-96e7f7f5e3e0",
+    "keyword": "f81b962e4d672b46d22d715e2bd3a307",
+    "answer": "Soy Javier. Me interesa obtener asesoría psicológica",
+    "options": {},
+    "from": "573155935407",
+    "refSerialize": "f81b962e4d672b46d22d715e2bd3a307"
+  },
+  {
+    "ref": "c470731d-19b0-4de8-95cb-96b19ebb5f62",
+    "keyword": "f81b962e4d672b46d22d715e2bd3a307",
+    "answer": "He estado pensando que sería mejor no seguir",
+    "options": {},
+    "from": "573155935407",
+    "refSerialize": "97869094947cc68f3f8c717418f1354a"
+  },
+  {
+    "ref": "5c4e75ec-ff68-49be-ac48-c3bce28ab7ae",
+    "keyword": "97869094947cc68f3f8c717418f1354a",
+    "answer": "Es que no tengo ganas de escribirte mas",
+    "options": {},
+    "from": "573155935407",
+    "refSerialize": "c27369e0f1d15d21722a847d244c7f8e"
+  },
+  {
+    "ref": "02dc917c-5379-46ac-b11b-8bb74e45e702",
+    "keyword": "c27369e0f1d15d21722a847d244c7f8e",
+    "answer": "Crees que lo mejor será rendirme y no regresar jamás?",
+    "options": {},
+    "from": "573155935407",
+    "refSerialize": "ccf16edcbb48fe1319601baeeaffda1b"
   }
 ]

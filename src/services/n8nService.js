@@ -4,11 +4,11 @@ const MessageUtil = require('../utils/messageUtil');
 
 class N8NService {
     constructor() {
-        this.webhookUrl = process.env.N8N_WEBHOOK_URL || 'http://localhost:5678/webhook-test/whatsapp';
+        this.webhookUrl = process.env.N8N_WEBHOOK_URL || 'http://localhost:5678/webhook/whatsapp';
     }
 
     async sendToN8N(from, message, originalContext = null) {
-        console.log('\n?? [N8N] Preparando envío:', { from, message });
+        console.log('\n?? [N8N] Preparando envï¿½o:', { from, message });
 
         let processedMessage = message;
         let messageType = 'text';
@@ -22,10 +22,10 @@ class N8NService {
             messageType = processed.type;
             metadata = processed.metadata;
             
-            // Si es un mensaje de voz y tiene transcripción, usarla
+            // Si es un mensaje de voz y tiene transcripciï¿½n, usarla
             if (messageType === 'voice' && originalContext.transcripcion) {
                 transcripcion = originalContext.transcripcion;
-                console.log(`?? [N8N] Usando transcripción: "${transcripcion}"`);
+                console.log(`?? [N8N] Usando transcripciï¿½n: "${transcripcion}"`);
             }
         }
 

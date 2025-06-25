@@ -4,7 +4,7 @@ const MessageUtil = require('../utils/messageUtil');
 
 class N8NService {
     constructor() {
-        this.webhookUrl = 'http://localhost:5678/webhook-test/whatsapp';
+        this.webhookUrl = 'http://localhost:5678/webhook/whatsapp';
     }
 
     async sendToN8N(from, message, originalContext = null) {
